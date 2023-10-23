@@ -2,7 +2,7 @@
 
 export WANDB_PROJECT="RumorDAS"
 export WANDB_DIR=... ## need to be defined
-output_dir=...       ## need to be defined
+output_dir=/mnt/1T/projects/RumorDAS       ## need to be defined
 batch_size=8
 
 for dataset in re2019 twitter15 twitter16
@@ -20,7 +20,8 @@ do
 				--num_clusters $num_clusters \
 				--dataset_name $dataset \
 				--fold $i \
-				--per_device_train_batch_size $batch_size
+				--per_device_train_batch_size $batch_size \
+				--output_dir $output_dir
 
 			## Build cluster summary pairs by kmeans for testing
 			#python main.py \

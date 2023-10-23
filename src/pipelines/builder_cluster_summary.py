@@ -154,7 +154,7 @@ class ClusterSummaryBuilder:
 				else: ## Less than or equal to 1 response
 					print("Ignore this tree since it has only 1 response or less.")
 				"""
-
+		ipdb.set_trace()
 		##################################################################
 		## ** NOTE ** 													##
 		## - each cluster may have more than one centroids since 		##

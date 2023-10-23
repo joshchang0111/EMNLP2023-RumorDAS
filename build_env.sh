@@ -4,6 +4,7 @@ pip install wandb
 pip install emoji
 pip install numpy
 pip install scipy
+pip install pandas
 pip install sklearn
 pip install matplotlib
 
@@ -14,7 +15,7 @@ pip install tweet-preprocessor
 
 # ** Hugging Face **
 pip install transformers==4.18.0
-pip install datasets==2.0.0
+pip install datasets
 pip install evaluate
 
 # ** PyTorch **

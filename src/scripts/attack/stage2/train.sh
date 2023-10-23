@@ -3,7 +3,7 @@
 export CUDA_VISIBLE_DEVICES=0
 export WANDB_PROJECT="RumorDAS"
 export WANDB_DIR=... ## need to be defined
-output_dir=...       ## need to be defined
+output_dir=/mnt/1T/projects/RumorDAS       ## need to be defined
 batch_size=8
 exp_name=bi-tgn/adv-stage2
 

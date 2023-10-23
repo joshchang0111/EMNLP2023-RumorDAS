@@ -269,6 +269,7 @@ def load_model(data_args, model_args, training_args):
 			revision=model_args.model_revision,
 			use_auth_token=True if model_args.use_auth_token else None,
 		)
+		
 		print("\nLoading rumor detector from adversarial training stage 2...")
 		ckpt_path = "{}/{}/bi-tgn/adv-stage2/{}".format(training_args.output_root, data_args.dataset_name, data_args.fold)
 		ckpt_dir  = find_ckpt_dir(ckpt_path)

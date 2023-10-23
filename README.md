@@ -6,7 +6,7 @@
 Code for the EMNLP 2023 paper "Beyond Detection: A Defend-and-Summarize Strategy for Robust and Interpretable Rumor Analysis on Social Media" by Yi-Ting Chang, Yun-Zhu Song, Yi-Syuan Chen, and Hong-Han Shuai.
 
 ## Environmental Setup
-Run the script `build_env.sh` first to install necessary packages through pip.
+This code is developed under Ubuntu 20.04.3 LTS and Python 3.8.10. Run the script `build_env.sh` first to install necessary packages through pip.
 
 ### Install PyTorch as follows.
 ```
@@ -20,128 +20,73 @@ $ pip install torch-scatter==2.0.8 -f https://data.pyg.org/whl/torch-1.11.0+cu10
 $ git clone https://github.com/subhadarship/kmeans_pytorch
 $ cd kmeans_pytorch
 $ pip install --editable .
+$ pip install numba
 ```
 
 ## Dataset
 The datasets should be placed at the folder `dataset` on the same layer as `src`. Each dataset should contain a main csv file `data.csv` and 5 folders in the format `split_{$FOLD_N}`. consisting of 8 columns (source_id, tweet_id, parent_idx, self_idx, num_parent, max_seq_len, text, veracity).
 
-### Build Clusters
-In order to train the **S**elf-**S**upervised **R**esponse **A**bstractor (SSRA) with $k$-means settings, you need to build the clusters information from the dataset first by running the following command.
-```
-python main.py \
-    --task_type build_cluster_summary \
-    --model_name_or_path facebook/bart-base \
-    --cluster_type kmeans \
-    --cluster_mode train \
-    --num_clusters $num_clusters \
-    --dataset_name $dataset \
-    --fold $i \
-    --per_device_train_batch_size $batch_size
-```
-More details can be found at `src/scripts/summarizer/build_cluster.sh`.
-
 Our processed datasets are available at [...].
 
 ## Run the Codes
-We provide the training & evaluation scripts for each component of our framework in the folder `src/scripts`. Notice that each script requires defining an experiment name (`--exp_name`), and a folder with that name will be automatically created after running the command, any experimental results will be stored in this folder, including model checkpoints.
+We provide the training and evaluation scripts for each component of our framework in the folder `src/scripts`. Notice that each script requires an output root directory (`$output_dir`) and an experiment name (`--exp_name`). After executing each script, the experimental results including the model checkpoints will be automatically stored in the following structure:
+```
+|__ {$output_dir}
+    |__ {$DATASET_NAME_0}
+        |__ {$EXP_NAME_0}
+        |__ {$EXP_NAME_2}
+        |__ ...
+    |__ {$DATASET_NAME_1}
+        |__ {$EXP_NAME_1}
+    |__ ...
+```
 
 ### 1. Train BiTGN (RoBERTa)
+Train the model.
 ```
-python main.py \
-    --task_type train_detector \
-    --model_name_or_path roberta-base \
-    --td_gcn \
-    --bu_gcn \
-    --dataset_name $dataset \
-    --train_file train.csv \
-    --validation_file test.csv \
-    --fold $i \
-    --do_train \
-    --per_device_train_batch_size $batch_size \
-    --learning_rate 2e-5 \
-    --num_train_epochs 10 \
-    --exp_name $exp_name \
-    --output_dir $output_dir
+$ sh scripts/detection/train.sh
 ```
-Evaluation command can be found in `src/scripts/detection/eval.sh`.
+Evaluate trained models.
+```
+$ sh scripts/detection/eval.sh
+```
 
 ### 2. Train BiTGN (BART) + ARG
 #### 2.1 Adversarial Training Stage 1
+Train the detector along with the generator.
 ```
-python main.py \
-    --task_type train_adv_stage1 \
-    --model_name_or_path facebook/bart-base \
-    --td_gcn \
-    --bu_gcn \
-    --dataset_name $dataset \
-    --train_file train.csv \
-    --validation_file test.csv \
-    --fold $i \
-    --do_train \
-    --per_device_train_batch_size $batch_size \
-    --learning_rate 2e-5 \
-    --num_train_epochs 10 \
-    --exp_name $exp_name \
-    --output_dir $output_dir \
+$ sh scripts/attack/stage1/train.sh
+```
+Evaluate the trained detector.
+```
+$ sh scripts/attack/stage1/eval.sh
 ```
 #### 2.2 Adversarial Training Stage 2
+Train the generator to attack the detector while fixing the detector. Note that this training stage should be executed after stage 1 finished, or at least one checkpoint from stage 1 exists.
 ```
-python main.py \
-    --task_type train_adv_stage2 \
-    --model_name_or_path facebook/bart-base \
-    --td_gcn \
-    --bu_gcn \
-    --dataset_name $dataset \
-    --train_file train.csv \
-    --validation_file test.csv \
-    --fold $i \
-    --do_train \
-    --per_device_train_batch_size $batch_size \
-    --learning_rate 2e-5 \
-    --num_train_epochs 10 \
-    --exp_name $exp_name \
-    --output_dir "$output_dir"
+$ sh scripts/attack/stage2/train.sh
 ```
 
 ### 3. Train Response Extractor (AutoEncoder)
+This stage obtains the embedding from the pre-trained detector, please make sure you have at least one checkpoint from previous step before you run the following script.
 ```
-python main.py \
-    --task_type train_filter \
-    --model_name_or_path facebook/bart-base \
-    --filter_layer_enc $n_layer \
-    --filter_layer_dec $n_layer \
-    --dataset_name $dataset \
-    --train_file train.csv \
-    --validation_file test.csv \
-    --fold $i \
-    --do_train \
-    --per_device_train_batch_size $batch_size \
-    --learning_rate $lr \
-    --num_train_epochs 50 \
-    --exp_name filter_$n_layer \
-    --output_dir $output_dir
+$ sh scripts/summarizer/filter/train.sh
 ```
 
-### 4. Train Response Abstractor (SSRA)
-To train the response abstractor with $k$-means settings, check that you already build clusters as documented in the dataset description.
+### 4. Build Clusters
+In order to train the **S**elf-**S**upervised **R**esponse **A**bstractor (SSRA) with $k$-means settings, you need to build the clusters information from the dataset first by running the following script. Note that this step also requires a checkpoint from step 2.2, so make sure the settings is correct.
 ```
-python main.py \
-    --task_type ssra_kmeans \
-    --model_name_or_path lidiya/bart-base-samsum \
-    --cluster_type kmeans \
-    --cluster_mode train \
-    --num_clusters $num_clusters \
-    --dataset_name $dataset \
-    --train_file train.csv \
-    --validation_file test.csv \
-    --fold $i \
-    --do_train \
-    --per_device_train_batch_size $batch_size \
-    --learning_rate $lr \
-    --num_train_epochs 10 \
-    --exp_name ssra_kmeans_$num_clusters \
-    --output_dir $output_dir
+$ sh scripts/summarizer/build_cluster.sh
 ```
-Evaluation command can be found in `src/scripts/ssra-kmeans/eval.sh`.
+
+### 5. Train Response Abstractor (SSRA)
+To train the response abstractor with $k$-means settings, check that you have already built clusters information as documented in the dataset description .
+```
+$ sh scripts/summarizer/ssra-kmeans/train.sh
+```
+Evaluate the trained abstractors.
+```
+$ sh scripts/summarizer/ssra-kmeans/eval.sh
+```
 
 ## Citation

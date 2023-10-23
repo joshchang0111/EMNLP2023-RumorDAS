@@ -1,5 +1,4 @@
 import ipdb
-import streamlit as st
 from typing import List, Optional, Tuple, Union
 
 import torch
@@ -16,7 +15,6 @@ from .modeling_clustering import ClusterModel
 from .modeling_abstractor import BartForAbstractiveResponseSummarization
 from others.utils import find_ckpt_dir, post_process_generative_model, mean_pooling
 
-@st.cache_resource
 def load_abstractor(abstractor_name_or_path):
 	config_abs = AutoConfig.from_pretrained(
 		abstractor_name_or_path, 
