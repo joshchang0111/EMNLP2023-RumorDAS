@@ -380,7 +380,7 @@ class DataTrainingArguments:
 	## Self-defined ##
 	##################
 	dataset_root: Optional[str] = field(
-		default="../dataset/processedV2", 
+		default="../dataset", 
 		metadata={"help": "Root path of all datasets."}
 	)
 	fold: Optional[str] = field(
