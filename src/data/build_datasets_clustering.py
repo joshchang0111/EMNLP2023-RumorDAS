@@ -131,55 +131,6 @@ def build_datasets_clustering(data_args, model_args, training_args, config, toke
 
 		model_inputs = tokenizer(texts, padding=padding, max_length=data_args.max_tweet_length, truncation=True)
 
-		## Load topics
-		if model_args.cluster_type == "topics":
-			topics = json.load(open("{}/{}/topics.json".format(data_args.dataset_root, data_args.dataset_name)))
-			
-			corpus, topic_words_raw, topic_probs_raw = [], [], []
-			for src_id in src_ids:
-				tree_topic_words, tree_topic_probs, tree_corpus = extract_topic_words_probs(topics[src_id])
-				
-				## Collect for tokenization at once
-				corpus.extend(tree_corpus)
-				
-				## Collect words and probabilities of each topic for each thread
-				topic_words_raw.append(tree_topic_words)
-				topic_probs_raw.append(tree_topic_probs)
-
-			## Simply obtain tokenized id of each topic word
-			corpus = list(set(corpus))
-			corpus_ids = tokenizer(corpus, add_special_tokens=False, return_attention_mask=False)
-			word2id = dict(zip(corpus, corpus_ids["input_ids"]))
-			
-			## Iterate each tree
-			max_topic_seq_len, topic_ids, topic_probs = 0, [], []
-			for idx in range(len(topic_words_raw)):
-				tree_topic_words = topic_words_raw[idx]
-				tree_topic_probs = topic_probs_raw[idx]
-
-				## For each topic
-				tree_topic_ids, tree_topic_probs_new = [], []
-				for topic_idx in range(len(tree_topic_words)):
-					words = tree_topic_words[topic_idx] ## words of i-th topic
-					probs = tree_topic_probs[topic_idx] ## probs of i-th topic
-
-					## Map each topic word to token ids and concatenate into a sequence
-					ids, prb = [], []
-					for j, word in enumerate(words):
-						ids.extend(word2id[word])
-						prb.extend([probs[j]] * len(word2id[word]))
-
-					tree_topic_ids.append(ids)
-					tree_topic_probs_new.append(prb)
-
-					if len(ids) > max_topic_seq_len:
-						max_topic_seq_len = len(ids)
-
-				topic_ids.append(tree_topic_ids)
-				topic_probs.append(tree_topic_probs_new)
-
-			topic_ids, topic_probs, topic_msk = add_special_tokens_and_pad(topic_ids, topic_probs, max_topic_seq_len)
-
 		start_idx = 0
 		input_ids = []
 		attn_mask = []
@@ -195,10 +146,6 @@ def build_datasets_clustering(data_args, model_args, training_args, config, toke
 		model_inputs["tree_lens"] = tree_lens
 		model_inputs["input_ids"] = input_ids
 		model_inputs["attention_mask"] = attn_mask
-		if model_args.cluster_type == "topics":
-			model_inputs["topic_ids"] = topic_ids
-			model_inputs["topic_msk"] = topic_msk
-			model_inputs["topic_probs"] = topic_probs
 
 		return model_inputs
 

@@ -32,8 +32,7 @@ do
 			--learning_rate 2e-5 \
 			--num_train_epochs 10 \
 			--exp_name $exp_name \
-			--output_dir "$output_dir" \
-			--report_to wandb
+			--output_dir "$output_dir"
 	done
 done
 

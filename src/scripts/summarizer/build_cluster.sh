@@ -3,7 +3,7 @@
 export WANDB_PROJECT="RumorDAS"
 export WANDB_DIR=... ## need to be defined
 output_dir=/mnt/1T/projects/RumorDAS       ## need to be defined
-batch_size=8
+batch_size=1
 
 for dataset in re2019 twitter15 twitter16
 do
