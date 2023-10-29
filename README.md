@@ -7,6 +7,25 @@
 ## Introduction
 Original PyTorch implementation for the EMNLP 2023 paper "Beyond Detection: A Defend-and-Summarize Strategy for Robust and Interpretable Rumor Analysis on Social Media" by Yi-Ting Chang, Yun-Zhu Song, Yi-Syuan Chen, and Hong-Han Shuai.
 
+This project is organized in the following structure.
+```
+|__ src
+    |__ main.py   -> organize main flow for the codes
+    |__ data      -> data preprocessing/build datasets
+    |__ models    -> different model classes
+    |__ others
+    |__ pipelines -> different trainers
+    |__ scripts   -> scripts for train/test of each task
+|__ dataset       -> put the processed datasets here
+    |__ re2019
+    |__ twitter15
+    |__ twitter16
+|__ {$output_dir} -> store the experimental results with the `exp_id` in each script as the folder name
+    |__ re2019
+    |__ twitter15
+    |__ twitter16
+```
+
 ## Environmental Setup
 This code is developed under **Ubuntu 20.04.3 LTS** and **Python 3.8.10**. Run the script `build_env.sh` first to install necessary packages through pip.
 
@@ -118,6 +137,16 @@ $ sh scripts/summarizer/ssra-kmeans/eval.sh
 ```
 
 ### 5. Evaluate the BiTGN with DAS
-...
+Evaluate DAS with the following hyper-parameters:
+- extract ratio $\rho$ in the range $\{0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.9\}$
+- number of clusters $k$ in the range $\{1, 2, 3, 4, 5\}$
+```bash
+$ sh scripts/attack/stage2/eval.sh
+```
+The script performs the following evaluation for each fold and hyper-parameters set:
+1. Evaluate stage-2 detector *without* adversarial attack.
+2. Evaluate stage-2 detector *under* adversarial attack *without* summarizer.
+3. Evaluate stage-2 detector *under* adversarial attack *with* summarizer.
 
 ## Citation
+Coming soon.
