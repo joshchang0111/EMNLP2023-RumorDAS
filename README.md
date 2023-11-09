@@ -138,8 +138,8 @@ $ sh scripts/summarizer/ssra-kmeans/eval.sh
 
 ### 5. Evaluate the BiTGN with DAS
 Evaluate DAS with the following hyper-parameters:
-- extract ratio $\rho$ in the range $\{{0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.9\}}$
-- number of clusters $k$ in the range $\{{1, 2, 3, 4, 5\}}$
+- extract ratio $\rho$ in the range $\\{0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.9\\}$
+- number of clusters $k$ in the range $\\{1, 2, 3, 4, 5\\}$
 ```bash
 $ sh scripts/attack/stage2/eval.sh
 ```
