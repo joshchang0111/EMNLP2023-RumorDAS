@@ -2,7 +2,7 @@
 ![](https://img.shields.io/badge/Python-3.8-blue) ![](https://img.shields.io/badge/Pytorch-1.11.0-orange)
 
 ![](https://github.com/joshchang0111/EMNLP2023-RumorDAS/blob/master/das_overview.png)
-[Paper] [Datasets]
+[Paper] [[Datasets](https://drive.google.com/file/d/1gkK3oNstw_pWehLD9W7ZdvfTxmPUlREz/view?usp=sharing)]
 
 ## Introduction
 Original PyTorch implementation for the EMNLP 2023 paper "Beyond Detection: A Defend-and-Summarize Strategy for Robust and Interpretable Rumor Analysis on Social Media" by Yi-Ting Chang, Yun-Zhu Song, Yi-Syuan Chen, and Hong-Han Shuai.
@@ -34,7 +34,7 @@ This code is developed under **Ubuntu 20.04.3 LTS** and **Python 3.8.10**. Run t
 $ pip install torch==1.11.0+cu102 --extra-index-url https://download.pytorch.org/whl/cu102
 $ pip install torch-scatter==2.0.8 -f https://data.pyg.org/whl/torch-1.11.0+cu102.html
 ```
-**[[Reference Solution for Installing PyTorch Geometric](https://stackoverflow.com/questions/70008715/pytorch-and-torch-scatter-were-compiled-with-different-cuda-versions-on-google-c)]**: For installing torch-scatter/torch-cluster/torch-sparse, you should first obtain the **reference url** by your desired *PyTorch* and *CUDA* version according to your computer. Next, you need to specify the latest version of torch-scatter provided by the link (which is 2.0.8 in this case) when installing through pip.
+[[Reference Solution for Installing PyTorch Geometric](https://stackoverflow.com/questions/70008715/pytorch-and-torch-scatter-were-compiled-with-different-cuda-versions-on-google-c)]: For installing torch-scatter/torch-cluster/torch-sparse, you should first obtain the **reference url** by your desired *PyTorch* and *CUDA* version according to your computer. Next, you need to specify the latest version of torch-scatter provided by the link (which is 2.0.8 in this case) when installing through pip.
 
 ### Install kmeans_pytorch from source.
 ```bash
@@ -73,7 +73,7 @@ The file `data.csv` consists of 8 columns of data as follows.
 |text        |textual content for each tweet|
 |veracity    |veracity label for the source post of each conversation thread|
 
-Our processed datasets are available at [Datasets].
+Our processed datasets are available at [[Datasets](https://drive.google.com/file/d/1gkK3oNstw_pWehLD9W7ZdvfTxmPUlREz/view?usp=sharing)].
 
 ## Run the Codes
 We provide the training and evaluation scripts for each component of our framework in the folder `src/scripts`. Notice that each script requires an output root directory (`$output_dir`) and an experiment name (`--exp_name`). After executing each script, the experimental results including the model checkpoints will be automatically stored in the following structure:
@@ -138,8 +138,8 @@ $ sh scripts/summarizer/ssra-kmeans/eval.sh
 
 ### 5. Evaluate the BiTGN with DAS
 Evaluate DAS with the following hyper-parameters:
-- extract ratio $\rho$ in the range $\{0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.9\}$
-- number of clusters $k$ in the range $\{1, 2, 3, 4, 5\}$
+- extract ratio $\rho$ in the range $\{{0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.9\}}$
+- number of clusters $k$ in the range $\{{1, 2, 3, 4, 5\}}$
 ```bash
 $ sh scripts/attack/stage2/eval.sh
 ```
