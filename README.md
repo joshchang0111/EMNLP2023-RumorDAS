@@ -2,7 +2,7 @@
 ![](https://img.shields.io/badge/Python-3.8-blue) ![](https://img.shields.io/badge/Pytorch-1.11.0-orange)
 
 ![](https://github.com/joshchang0111/EMNLP2023-RumorDAS/blob/master/das_overview.png)
-[Paper] [[Datasets](https://drive.google.com/file/d/1gkK3oNstw_pWehLD9W7ZdvfTxmPUlREz/view?usp=sharing)]
+[[Paper](https://aclanthology.org/2023.emnlp-main.707/)] [[Datasets](https://drive.google.com/file/d/1gkK3oNstw_pWehLD9W7ZdvfTxmPUlREz/view?usp=sharing)]
 
 ## Introduction
 Original PyTorch implementation for the EMNLP 2023 paper "Beyond Detection: A Defend-and-Summarize Strategy for Robust and Interpretable Rumor Analysis on Social Media" by Yi-Ting Chang, Yun-Zhu Song, Yi-Syuan Chen, and Hong-Han Shuai.
@@ -149,4 +149,19 @@ The script performs the following evaluation for each fold and hyper-parameters 
 3. Evaluate stage-2 detector *under* adversarial attack *with* summarizer.
 
 ## Citation
-Coming soon.
+```
+@inproceedings{chang-etal-2023-beyond,
+    title = "Beyond Detection: A Defend-and-Summarize Strategy for Robust and Interpretable Rumor Analysis on Social Media",
+    author = "Chang, Yi-Ting  and
+      Song, Yun-Zhu  and
+      Chen, Yi-Syuan  and
+      Shuai, Hong-Han",
+    booktitle = "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+    month = dec,
+    year = "2023",
+    address = "Singapore",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2023.emnlp-main.707",
+    pages = "11538--11556"
+}
+```
